@@ -9,6 +9,7 @@ const Home: NextPageWithLayout = () => {
     >
       <h1 className={"text-5xl font-bold"}>MICROBOARD</h1>
       <p>test ci</p>
+      <p>test discord webhook release</p>
     </section>
   );
 };
