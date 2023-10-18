@@ -1,0 +1,52 @@
+name: Lint Code
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: pnpm/action-setup@v2.2.4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies (with cache)
+        run: pnpm install
+
+      - name: Lint code
+        run: pnpm run lint
+        if: always()
+        env:
+          SKIP_ENV_VALIDATION: true
+
+      - name: Check for lint errors
+        run: |
+          if [ -n "$(grep 'error' $(steps.lint.outputs.lint_output))" ]; then
+            echo "Linting errors found!"
+            exit 1
+          fi
+        if: always()

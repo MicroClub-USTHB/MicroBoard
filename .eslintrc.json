@@ -1,0 +1,17 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked"
+  ],
+  "parserOptions": {
+    "project": true
+  },
+  "ignorePatterns": ["next.config.js", "prettier.config.js"],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-interface": "off"
+  }
+}
